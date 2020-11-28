@@ -44,7 +44,7 @@ const fetchTopCountries = async () => {
   }
 };
 
-const fetchStats = async (country = 'china') => {
+const fetchStats = async (country = 'usa') => {
   const res = await fetch(baseUrl + `countries/${country}`);
   const data = await res.json();
   return `

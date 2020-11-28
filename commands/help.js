@@ -2,14 +2,13 @@ module.exports = {
   name: 'help',
   description: 'Help options.',
   execute(message, args) {
-    // helpCommand(message, args);
     if (!args.length) {
-      message.channel.send('What? try `!help [topic]`');
+      // TODOS: Add help topics..?
+      message.channel.send('What? try `!help [topic]` this is a WIP');
     } else {
-      // helpCommand(args)
       message.channel.send('Work in progress.');
     }
-  }
+  },
 };
 
 // help command takes multiple args

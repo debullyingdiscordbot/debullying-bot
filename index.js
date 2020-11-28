@@ -1,16 +1,18 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const fs = require('fs');
+
 const client = new Discord.Client();
-
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands/').filter((file) => file.endsWith('.js'));
 
+// Dig through commands directory for all the command files ending in .js
+const fs = require('fs');
+const commandFiles = fs.readdirSync('./commands/').filter((file) => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
 
+// Using '!' for development, need a diff prefix for production
 const PREFIX = '!';
 
 client.login(process.env.BOT_TOKEN);
@@ -19,16 +21,19 @@ client.on('ready', () => {
   console.log(`Bot: ${client.user.tag}!`);
 });
 
+// Welcomes new member to server by DM
 client.on('guildMemberAdd', (member) => {
   member.send(
     'Welcome to the server. (Placeholder). Rule 1: Must behave Rule 2: Rule 3: ipsum lorem.... Answer these questions. Will you behave?.. (bot will ask a few verification questions?'
   );
 });
 
+// Most of the magic happens here
 client.on('message', (msg) => {
   if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
   processCommand(msg);
 
+  // TODOS: Move the big ole chunk of text into their own commands under ./commands/
   // if (command === 'kick') {
   //   if (!msg.member.hasPermission('KICK_MEMBERS'))
   //     return msg.reply('You do not have permissions to use that command.');
@@ -58,7 +63,7 @@ client.on('message', (msg) => {
   // console.log(`[${msg.author.tag}]: ${msg.content}`);
 });
 
-// processes the requested command
+// Process the requested command
 function processCommand(message) {
   const [commandName, ...args] = message.content
     .trim()
@@ -75,7 +80,7 @@ function processCommand(message) {
   try {
     command.execute(message, args);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     message.reply('there was an error trying to execute that command!');
   }
 }
