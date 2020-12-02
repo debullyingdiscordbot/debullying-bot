@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.mongoose = require('./utils/mongoose');
 
 // Dig through commands directory for all the command files ending in .js
 const fs = require('fs');
@@ -14,8 +15,6 @@ for (const file of commandFiles) {
 
 // Using '!' for development, need a diff prefix for production
 const PREFIX = '!';
-
-client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
   console.log(`Bot: ${client.user.tag}!`);
@@ -62,6 +61,9 @@ client.on('message', (msg) => {
 
   // console.log(`[${msg.author.tag}]: ${msg.content}`);
 });
+
+client.mongoose.init();
+client.login(process.env.BOT_TOKEN);
 
 // Process the requested command
 function processCommand(message) {
