@@ -50,7 +50,7 @@ const fetchStats = async (country = 'usa') => {
   return `
     ${data.country}
     cases: ${data.cases} | today: ${data.todayCases} | active: ${data.active}
-    cases per million: ${data.casesPerOneMillion}
+    cases per millions: ${data.casesPerOneMillion}
     deaths: ${data.deaths} | today: ${data.todayDeaths}
     recovered: ${data.recovered} | critical: ${data.critical}
     total tests: ${data.totalTests} | tests/million: ${data.testsPerOneMillion} 
