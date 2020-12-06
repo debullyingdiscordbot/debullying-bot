@@ -1,12 +1,14 @@
 require('dotenv').config();
+const fs = require('fs');
 const Discord = require('discord.js');
+const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-client.mongoose = require('./utils/mongoose');
+client.data = require('./utils/mongoose');
+client.logger = require('./utils/Logger');
 
 // Dig through commands directory for all the command files ending in .js
-const fs = require('fs');
 const commandFiles = fs.readdirSync('./commands/').filter((file) => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -62,8 +64,8 @@ client.on('message', (msg) => {
   // console.log(`[${msg.author.tag}]: ${msg.content}`);
 });
 
-client.mongoose.init();
-client.login(process.env.BOT_TOKEN);
+// client.data.init();
+// client.login(process.env.BOT_TOKEN);
 
 // Process the requested command
 function processCommand(message) {
@@ -82,7 +84,27 @@ function processCommand(message) {
   try {
     command.execute(message, args);
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     message.reply('there was an error trying to execute that command!');
   }
 }
+
+// Connect to db
+mongoose
+  .connect(process.env.MONGODB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    autoIndex: false,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 500,
+    poolSize: 5,
+    connectTimeoutMS: 10000,
+    family: 4,
+  })
+  .then(() => {
+    client.logger.log('Connected to mongooo db.', 'log');
+  })
+  .catch((err) => {
+    client.logger.log(`Error connecting to db. Error: ${err}`, 'error');
+  });
+client.login(process.env.BOT_TOKEN);
