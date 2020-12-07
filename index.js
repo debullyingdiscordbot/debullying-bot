@@ -5,8 +5,13 @@ const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-// client.data = require('./utils/mongoose');
+client.mongoose = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
+
+async function init() {
+  // Load events
+  // Load commands
+}
 
 // Dig through commands directory for all the command files ending in .js
 const commandFiles = fs.readdirSync('./commands/').filter((file) => file.endsWith('.js'));
@@ -60,30 +65,31 @@ function processCommand(message) {
 }
 
 // Connect to db
-mongoose
-  .connect(process.env.MONGODB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    autoIndex: false,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 500,
-    poolSize: 5,
-    connectTimeoutMS: 10000,
-    family: 4,
-  })
-  .then(() => {
-    client.logger.log('Connected to mongooo db.', 'log');
-  })
-  .catch((err) => {
-    client.logger.log(`Error connecting to db. Error: ${err}`, 'error');
-  });
+// mongoose
+//   .connect(process.env.MONGODB, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     autoIndex: false,
+//     reconnectTries: Number.MAX_VALUE,
+//     reconnectInterval: 500,
+//     poolSize: 5,
+//     connectTimeoutMS: 10000,
+//     family: 4,
+//   })
+//   .then(() => {
+//     client.logger.log('Connected to mongooo db.', 'log');
+//   })
+//   .catch((err) => {
+//     client.logger.log(`Error connecting to db. Error: ${err}`, 'error');
+//   });
+client.mongoose.init();
 client.login(process.env.BOT_TOKEN);
 
-client
-  .on('disconnect', () => client.logger.log('Bot is disconnecting...', 'warn'))
-  .on('reconnecting', () => client.logger.log('Bot reconnecting...', 'log'))
-  .on('error', (e) => client.logger.log(e, 'error'))
-  .on('warn', (info) => client.logger.log(info, 'warn'));
+// client
+//   .on('disconnect', () => client.logger.log('Bot is disconnecting...', 'warn'))
+//   .on('reconnecting', () => client.logger.log('Bot reconnecting...', 'log'))
+//   .on('error', (e) => client.logger.log(e, 'error'))
+//   .on('warn', (info) => client.logger.log(info, 'warn'));
 
 //For any unhandled errors
 process.on('unhandledRejection', (err) => {
