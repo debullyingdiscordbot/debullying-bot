@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-client.data = require('./utils/mongoose');
+// client.data = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
 
 // Dig through commands directory for all the command files ending in .js
@@ -18,6 +18,8 @@ for (const file of commandFiles) {
 // Using '!' for development, need a diff prefix for production
 const PREFIX = '!';
 
+// EVENTS
+// todo: move these events into its own directory
 client.on('ready', () => {
   console.log(`Bot: ${client.user.tag}!`);
 });
@@ -33,39 +35,7 @@ client.on('guildMemberAdd', (member) => {
 client.on('message', (msg) => {
   if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
   processCommand(msg);
-
-  // TODOS: Move the big ole chunk of text into their own commands under ./commands/
-  // if (command === 'kick') {
-  //   if (!msg.member.hasPermission('KICK_MEMBERS'))
-  //     return msg.reply('You do not have permissions to use that command.');
-  //   if (args.length === 0) return msg.reply('Please provide ID');
-
-  //   const member = msg.guild.members.cache.get(args[0]);
-
-  //   if (member) {
-  //     member
-  //       .kick('misbehaving')
-  //       .then((member) => msg.channel.send(`Bye ${member}.`))
-  //       .catch((err) => {
-  //         console.error(err);
-  //         msg.channel.send('This member is an admin. No can do.');
-  //       });
-  //   } else {
-  //     msg.channel.send('That member was not found.');
-  //   }
-  // } else if (command === 'ban') {
-  //   if (!msg.member.hasPermission('BAN_MEMBERS'))
-  //     return msg.reply('You do not have permissions to use that command.');
-  //   if (args.length === 0) return msg.reply('Please provide ID');
-
-  //   msg.guild.members.ban(args[0]).catch((err) => console.log(err));
-  // }
-
-  // console.log(`[${msg.author.tag}]: ${msg.content}`);
 });
-
-// client.data.init();
-// client.login(process.env.BOT_TOKEN);
 
 // Process the requested command
 function processCommand(message) {
@@ -108,3 +78,14 @@ mongoose
     client.logger.log(`Error connecting to db. Error: ${err}`, 'error');
   });
 client.login(process.env.BOT_TOKEN);
+
+client
+  .on('disconnect', () => client.logger.log('Bot is disconnecting...', 'warn'))
+  .on('reconnecting', () => client.logger.log('Bot reconnecting...', 'log'))
+  .on('error', (e) => client.logger.log(e, 'error'))
+  .on('warn', (info) => client.logger.log(info, 'warn'));
+
+//For any unhandled errors
+process.on('unhandledRejection', (err) => {
+  console.error(err);
+});
