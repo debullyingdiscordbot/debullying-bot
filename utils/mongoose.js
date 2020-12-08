@@ -25,6 +25,10 @@ module.exports = {
       console.error(`Mongoose connection error: \n ${err.stack}`);
     });
 
+    mongoose.connection.on('reconnecting', () => {
+      console.log('Reconnecting..');
+    });
+
     mongoose.connection.on('disconnected', () => {
       console.warn('Mongoose connection lost');
     });
