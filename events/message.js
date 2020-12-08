@@ -12,6 +12,7 @@ module.exports = async (client, message) => {
   const cmd = client.commands.get(command);
   if (!cmd) return;
 
-  cmd.execute(message, args);
+  // console.log(client);
+  cmd.execute(message, args, client);
   // cmd.execute(client, message, args);
 };

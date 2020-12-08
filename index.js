@@ -1,15 +1,16 @@
 require('dotenv').config();
 const fs = require('fs');
 const Discord = require('discord.js');
-const mongoose = require('mongoose');
+const moment = require('moment');
+// const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.mongoose = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
 
-// async function init() {
-// }
+const newUsers = new Discord.Collection();
+
 // Load events
 fs.readdir('./events/', (err, files) => {
   if (err) return console.error;
@@ -33,56 +34,27 @@ fs.readdir('./commands/', async (err, files) => {
   });
 });
 
-// Dig through commands directory for all the command files ending in .js
-// const commandFiles = fs.readdirSync('./commands/').filter((file) => file.endsWith('.js'));
-// for (const file of commandFiles) {
-//   const command = require(`./commands/${file}`);
-//   client.commands.set(command.name, command);
-// }
-
 // Using '!' for development, need a diff prefix for production
 const PREFIX = '!';
+// testing the below
+client.on('guildMemberAdd', (member) => {
+  const guild = member.guild;
+  if (!newUsers[guild.id]) newUsers[guild.id] = new Discord.Collection();
+  newUsers[guild.id].set(member.id, member.user);
 
-// EVENTS
-// todo: move these events into its own directory
-// client.on('ready', () => {
-//   console.log(`Bot: ${client.user.tag}!`);
-// });
+  if (newUsers[guild.id].size > 10) {
+    const userlist = newUsers[guild.id].map((u) => u.toString()).join(' ');
+    guild.channels
+      .find((channel) => channel.name === 'general')
+      .send('Welcome our new users!\n' + userlist);
+    newUsers[guild.id].clear();
+  }
+});
 
-// Welcomes new member to server by DM
-// client.on('guildMemberAdd', (member) => {
-//   member.send(
-//     'Welcome to the server. (Placeholder). Rule 1: Must behave Rule 2: Rule 3: ipsum lorem.... Answer these questions. Will you behave?.. (bot will ask a few verification questions?'
-//   );
-// });
-
-// Most of the magic happens here
-// client.on('message', (msg) => {
-//   if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
-//   processCommand(msg);
-// });
-
-// Process the requested command
-// function processCommand(message) {
-//   const [commandName, ...args] = message.content
-//     .trim()
-//     .substring(PREFIX.length)
-//     .split(/\s+/);
-
-//   if (!client.commands.has(commandName))
-//     return message.reply(
-//       'there was an error trying to execute that command! Try `!commands`'
-//     );
-
-//   const command = client.commands.get(commandName);
-
-//   try {
-//     command.execute(message, args);
-//   } catch (error) {
-//     console.error(error);
-//     message.reply('there was an error trying to execute that command!');
-//   }
-// }
+client.on('guildMemberRemove', (member) => {
+  const guild = member.guild;
+  if (newUsers[guild.id].has(member.id)) newUsers.delete(member.id);
+});
 
 client.mongoose.init();
 client.login(process.env.BOT_TOKEN);
