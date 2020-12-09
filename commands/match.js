@@ -13,10 +13,25 @@ module.exports = {
       .setColor('blue')
       .setFooter('footer goes here');
 
+    // ? Should bot send regular messages or embed messages?
+
     // message.author.send(
     //   "Welcome, let's get you paired to play. I have 2 questions I need answers for. \n1. What game do you want to play? Please type out the exact title."
     // );
 
-    return message.author.send(embed);
+    const msg = await message.author.send(embed);
+
+    const filter = (collected) => collected.author.id === message.author.id;
+    const collected = await msg.channel
+      .awaitMessages(filter, {
+        max: 1,
+        time: 50000,
+      })
+      .catch(() => {
+        message.author.send('Timeout');
+      });
+
+    if (collected.first().content === 'cancel') return message.author.send('Canceled');
+    message.author.send('Done !');
   },
 };
