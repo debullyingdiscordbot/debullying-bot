@@ -5,23 +5,13 @@ module.exports = {
   description: 'Ping!',
 
   async execute(message, args, client) {
-    let embed = new Discord.MessageEmbed()
-      .setTitle('booty')
-      .setDescription('wubba lubba')
-      .setColor('blue')
-      .setFooter('yes?');
+    // let embed = new Discord.MessageEmbed()
+    //   .setTitle('title')
+    //   .setDescription('wubba lubba dub dub')
+    //   .setColor('blue')
+    //   .setFooter('footer');
 
-    console.log(client.users);
-    const user = client.users.cache.get('785651262137303050');
-    user.send('testing');
-    return message.channel.send(embed);
+    message.author.send('hiya');
+    message.channel.send('pong?');
   },
 };
-
-// exports.run = (client, message, args) => {
-//   message.channel.send('Pong!').catch(console.error);
-// };
-
-// exports.help = {
-//   name: 'ping',
-// };
