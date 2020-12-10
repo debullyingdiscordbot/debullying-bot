@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
@@ -37,7 +37,7 @@ module.exports = {
 
       // console.log(`[${msg.author.tag}]: ${msg.content}`);
 
-      let embed = new Discord.MessageEmbed()
+      let embed = new MessageEmbed()
         .setTitle('kick')
         .setDescription('bye')
         .setColor('blue')
