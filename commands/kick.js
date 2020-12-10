@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
@@ -6,7 +6,7 @@ module.exports = {
   name: 'kick',
   description: 'Kick the member.',
 
-  async execute(message, args) {
+  async execute(message, args, client) {
     try {
       if (!message.member.hasPermission('KICK_MEMBERS'))
         return message.reply('You do not have permissions to use that command.');
@@ -37,7 +37,7 @@ module.exports = {
 
       // console.log(`[${msg.author.tag}]: ${msg.content}`);
 
-      let embed = new Discord.MessageEmbed()
+      let embed = new MessageEmbed()
         .setTitle('kick')
         .setDescription('bye')
         .setColor('blue')

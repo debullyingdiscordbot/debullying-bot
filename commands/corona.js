@@ -5,7 +5,7 @@ const baseUrl = 'https://coronavirus-19-api.herokuapp.com/';
 module.exports = {
   name: 'corona',
   description: 'Stats for covid-19.',
-  execute(message, args) {
+  execute(message, args, client) {
     if (!args.length) {
       fetchGlobal().then((data) => message.channel.send('```fix' + data + '```'));
     } else if (args[0] === 'top') {
