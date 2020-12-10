@@ -9,7 +9,8 @@ client.mongoose = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
 
 // Using '!' for development, need a diff prefix for production
-const PREFIX = '!';
+// MOVED PREFIX INTO .env
+// const PREFIX = '!';
 
 // Initialize all events and commands
 // Load events
@@ -23,6 +24,7 @@ fs.readdir('./events/', (err, files) => {
     client.on(evtName, evt.bind(null, client));
   });
 });
+
 // Load commands
 fs.readdir('./commands/', async (err, files) => {
   if (err) return console.error;
@@ -33,11 +35,6 @@ fs.readdir('./commands/', async (err, files) => {
     console.log(`Loaded command '${cmdName}'`);
     client.commands.set(cmdName, props);
   });
-});
-
-client.on('guildMemberRemove', (member) => {
-  console.log('sdlfsldkjflskdfjk');
-  // member.reply('testing');
 });
 
 client.mongoose.init();

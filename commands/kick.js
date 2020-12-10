@@ -6,7 +6,7 @@ module.exports = {
   name: 'kick',
   description: 'Kick the member.',
 
-  async execute(message, args) {
+  async execute(message, args, client) {
     try {
       if (!message.member.hasPermission('KICK_MEMBERS'))
         return message.reply('You do not have permissions to use that command.');

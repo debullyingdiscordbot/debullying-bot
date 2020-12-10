@@ -1,7 +1,8 @@
 module.exports = {
   name: 'commands',
   description: 'Shows the available commands.',
-  execute(message, args) {
+
+  execute(message, args, client) {
     message.channel.send(commands);
   },
 };

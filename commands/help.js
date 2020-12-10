@@ -1,7 +1,7 @@
 module.exports = {
   name: 'help',
   description: 'Help options.',
-  execute(message, args) {
+  execute(message, args, client) {
     if (!args.length) {
       // TODOS: Add help topics..?
       message.channel.send('What? try `!help [topic]` this is a WIP');
