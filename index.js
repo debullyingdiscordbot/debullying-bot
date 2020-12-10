@@ -2,15 +2,16 @@ require('dotenv').config();
 const fs = require('fs');
 const Discord = require('discord.js');
 const moment = require('moment');
-// const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.mongoose = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
 
-const newUsers = new Discord.Collection();
+// Using '!' for development, need a diff prefix for production
+const PREFIX = '!';
 
+// Initialize all events and commands
 // Load events
 fs.readdir('./events/', (err, files) => {
   if (err) return console.error;
@@ -32,13 +33,6 @@ fs.readdir('./commands/', async (err, files) => {
     console.log(`Loaded command '${cmdName}'`);
     client.commands.set(cmdName, props);
   });
-});
-
-// Using '!' for development, need a diff prefix for production
-const PREFIX = '!';
-// testing the below
-client.on('guildMemberAdd', (member) => {
-  member.send('testing');
 });
 
 client.on('guildMemberRemove', (member) => {
