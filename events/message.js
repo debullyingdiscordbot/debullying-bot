@@ -1,5 +1,5 @@
 module.exports = async (client, message) => {
-  console.log(process.env.PREFIX);
+  // console.log(process.env.PREFIX);
   if (!message.guild) return;
 
   if (message.author.bot) return;
