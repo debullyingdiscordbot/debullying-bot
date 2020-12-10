@@ -6,10 +6,10 @@ module.exports = async (client, member) => {
   );
   if (!channel) return;
 
-  const joinembed = new Discord.MessageEmbed()
+  const embedMsg = new Discord.MessageEmbed()
     .setTitle(`A new member has departed`)
     .setDescription(`${member} has left the server`)
     .setColor('#FF0000');
 
-  channel.send(joinembed);
+  channel.send(embedMsg);
 };

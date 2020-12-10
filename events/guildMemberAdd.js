@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 
 module.exports = async (client, member) => {
-  // console.log(member);
-
   member.send('hello there!!!!!!!');
 
   const channel = member.guild.channels.cache.find(

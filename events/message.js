@@ -1,11 +1,12 @@
 module.exports = async (client, message) => {
+  console.log(process.env.PREFIX);
   if (!message.guild) return;
 
   if (message.author.bot) return;
-  // if (message.content.indexOf(settings.prefix) !== 0) return;
-  // if (message.content.indexOf(settings.prefix) !== 0) return;
 
-  const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g);
+  // TODO: figure out whats wrong with process.env.prefix.. or change up the way prefix is done
+  const args = message.content.slice('!'.length).trim().split(/ +/g);
+  // const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   const cmd = client.commands.get(command);

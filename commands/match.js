@@ -13,12 +13,6 @@ module.exports = {
       .setColor('blue')
       .setFooter('footer goes here');
 
-    // ? Should bot send regular messages or embed messages?
-
-    // message.author.send(
-    //   "Welcome, let's get you paired to play. I have 2 questions I need answers for. \n1. What game do you want to play? Please type out the exact title."
-    // );
-
     const msg = await message.author.send(embed);
 
     const filter = (collected) => collected.author.id === message.author.id;
