@@ -7,10 +7,10 @@ module.exports = {
   async execute(message, args, client) {
     console.log(message.author);
 
+    // todos: search db if user exist, if not, create
     const user = new User({
-      _id: mongoose.Types.ObjectId(),
       userid: message.author.id,
-      username: message.author.username,
+      username: `${message.author.username}#${message.author.discriminator}`,
     });
 
     try {
