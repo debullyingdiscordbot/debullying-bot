@@ -127,7 +127,7 @@ module.exports = {
       // save request into mongo db in request model
       const queue = new Request({
         user: `${message.author.username}#${message.author.discriminator}`,
-        game: collected.first().content.toUpperCase(),
+        game: collected.first().content.toLowerCase(),
         timeframe: time,
       });
 
