@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
-const User = require('../models/user');
+// const User = require('../models/user');
+const Request = require('../models/request');
 
 const foundGameMsg = new MessageEmbed()
   .setTitle('PLaceholder Title')
@@ -71,7 +72,7 @@ module.exports = {
           .then((reaction) => {
             // todo: make analyizing emojis a reusable method on its own and save the request to db
             if (reaction.first().emoji.name == '💚') {
-              // processReaction()
+              processReaction(reaction.first().emoji.name);
               message.author.send(postReactionMsg);
               // todo: add user to mongo db (username, id, game, and time)
             } else if (reaction.first().emoji.name == '💙') {
@@ -101,8 +102,40 @@ module.exports = {
 
     // helper
     const processReaction = (reaction) => {
+      // console.log(reaction);
+      // todo: check to see if user already have existing request before processing
+      let time;
+      switch (reaction) {
+        case (reaction = '💙'):
+          time = 30;
+          break;
+        case (reaction = '💚'):
+          time = 60;
+          break;
+        case (reaction = '❤️'):
+          time = 120;
+          break;
+        case (reaction = '💛'):
+          time = 180;
+          break;
+        default:
+          time = 0;
+      }
+
       // case statement for different heart reactions
+
       // save request into mongo db in request model
+      const queue = new Request({
+        user: `${message.author.username}#${message.author.discriminator}`,
+        game: collected.first().content.toUpperCase(),
+        timeframe: time,
+      });
+
+      try {
+        queue.save();
+      } catch (error) {
+        console.error(error);
+      }
     };
   },
 };
