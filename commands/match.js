@@ -34,6 +34,7 @@ module.exports = {
 
   async execute(message, args, client) {
     // todo: turn the msg and filter into a reusable method later when refactoring. there gonna be some loopidooos and stuff.
+    // todo: check user in database and see if they're in the green, if not, return sorry message
     const msg = await message.author.send(greetingMsg);
     const filter = (collected) => collected.author.id === message.author.id;
     const collected = await msg.channel
@@ -63,48 +64,25 @@ module.exports = {
           .awaitReactions(
             (reaction, user) =>
               user.id == message.author.id &&
-              (reaction.emoji.name == '👍' ||
-                reaction.emoji.name == '👎' ||
-                reaction.emoji.name == '💙' ||
-                reaction.emoji.name == '💚'),
+              (reaction.emoji.name == '💙' ||
+                reaction.emoji.name == '💚' ||
+                reaction.emoji.name == '❤️' ||
+                reaction.emoji.name == '💛'),
             { max: 1, time: 60000 }
           )
           .then((reaction) => {
-            // todo: make analyizing emojis a reusable method on its own and save the request to db
-            if (reaction.first().emoji.name == '💚') {
-              processReaction(reaction.first().emoji.name);
-              message.author.send(postReactionMsg);
-              // todo: add user to mongo db (username, id, game, and time)
-            } else if (reaction.first().emoji.name == '💙') {
-              message.author.send(postReactionMsg);
-              // console.log(collected);
-            } else message.author.send('Operation canceled.');
+            processReaction(reaction.first().emoji.name);
           })
           .catch(() => {
             message.author.send('No reaction after 60 seconds, operation canceled');
           });
       });
-
-      // const filter = (collected) => collected.author.id === message.author.id;
-      // const collected = await newMsg.channel
-      //   .awaitMessages(filter, {
-      //     max: 1,
-      //     time: 50000,
-      //   })
-      //   .catch(() => {
-      //     message.author.send('This request timed out. Try again.');
-      //   });
-
-      // console.log(collected);
     }
 
-    // message.author.send('Done !');
-
     // helper
-    const processReaction = (reaction) => {
-      // console.log(reaction);
-      // todo: check to see if user already have existing request before processing
+    const processReaction = async (reaction) => {
       let time;
+      // case statement for different heart reactions
       switch (reaction) {
         case (reaction = '💙'):
           time = 30;
@@ -122,8 +100,7 @@ module.exports = {
           time = 0;
       }
 
-      // case statement for different heart reactions
-
+      // todo: check to see if user already have existing request before processing
       // save request into mongo db in request model
       const queue = new Request({
         user: `${message.author.username}#${message.author.discriminator}`,
@@ -132,7 +109,8 @@ module.exports = {
       });
 
       try {
-        queue.save();
+        await queue.save();
+        message.author.send(postReactionMsg);
       } catch (error) {
         console.error(error);
       }
