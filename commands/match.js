@@ -46,7 +46,6 @@ module.exports = {
         message.author.send('This request timed out. Try again.');
       });
 
-    // console.log(collected);
     // todo: get collect.first().content.toLowerCase() and run it through a method that checks if valid game using the big game API
     // todo:
 
@@ -79,7 +78,7 @@ module.exports = {
       });
     }
 
-    // helper
+    // helpers
     const processReaction = async (reaction) => {
       let time;
       // case statement for different heart reactions
@@ -99,17 +98,23 @@ module.exports = {
         default:
           time = 0;
       }
+      // checks to see if user already have existing request before processing
+      updateOrCreateRequest(time);
+    };
 
-      // todo: check to see if user already have existing request before processing
-      // save request into mongo db in request model
-      const queue = new Request({
-        user: `${message.author.username}#${message.author.discriminator}`,
-        game: collected.first().content.toLowerCase(),
-        timeframe: time,
-      });
-
+    const updateOrCreateRequest = async (time) => {
       try {
-        await queue.save();
+        const filter = { id: message.author.id };
+        const update = {
+          username: `${message.author.username}#${message.author.discriminator}`,
+          game: collected.first().content.toLowerCase(),
+          timeframe: time,
+        };
+        await Request.findOneAndUpdate(filter, update, {
+          new: true,
+          upsert: true,
+        });
+
         message.author.send(postReactionMsg);
       } catch (error) {
         console.error(error);
