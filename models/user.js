@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  userid: String,
+  id: String,
   username: String,
   muteCount: {
     type: Number,
