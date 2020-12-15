@@ -5,8 +5,9 @@ const RequestSchema = new mongoose.Schema(
     user: String,
     game: String,
     timeframe: Number,
-  },
-  { timestamps: true }
+    date: { type: Date, default: Date.now },
+  }
+  // { timestamps: true }
 );
 
 module.exports = mongoose.model('Request', RequestSchema);

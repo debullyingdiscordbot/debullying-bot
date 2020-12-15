@@ -8,13 +8,28 @@ module.exports = {
     console.log(message.author);
 
     // todos: search db if user exist, if not, create
-    const user = new User({
-      userid: message.author.id,
-      username: `${message.author.username}#${message.author.discriminator}`,
-    });
 
     try {
-      await user.save();
+      const filter = { userid: message.author.id };
+      const update = {
+        username: `${message.author.username}#${message.author.discriminator}`,
+      };
+      await User.findOneAndUpdate(
+        filter,
+        update
+        //   , {
+        //   new: true,
+        //   upsert: true,
+        // }
+      );
+      if (!user) {
+        const newUser = new User({
+          userid: message.author.id,
+          username: `${message.author.username}#${message.author.discriminator}`,
+        });
+        await newUser.save();
+      }
+      // console.log(user);
     } catch (error) {
       console.error(error);
     }
