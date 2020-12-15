@@ -46,7 +46,7 @@ module.exports = {
         message.author.send('This request timed out. Try again.');
       });
 
-    // console.log(collected);
+    console.log(collected);
     // todo: get collect.first().content.toLowerCase() and run it through a method that checks if valid game using the big game API
     // todo:
 
