@@ -1,16 +1,11 @@
 require('dotenv').config();
 const fs = require('fs');
 const Discord = require('discord.js');
-const moment = require('moment');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.mongoose = require('./utils/mongoose');
 client.logger = require('./utils/Logger');
-
-// Using '!' for development, need a diff prefix for production
-// MOVED PREFIX INTO .env
-// const PREFIX = '!';
 
 // Initialize all events and commands
 // Load events
