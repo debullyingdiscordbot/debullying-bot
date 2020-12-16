@@ -50,7 +50,8 @@ module.exports = {
 
     if (collected.first().content.toLowerCase() === 'cancel') {
       return message.author.send('Canceled');
-    } else if (collected.first().content.toLowerCase() === 'overwatch') {
+    } else {
+      // } else if (collected.first().content.toLowerCase() === 'overwatch') {
       // } else if (collected.first().content.toLowerCase() === a valid game from the api) {
       const newMsg = await message.author.send(foundGameMsg).then((embedMsg) => {
         embedMsg.react('💙');
@@ -111,6 +112,7 @@ module.exports = {
           username: `${message.author.username}#${message.author.discriminator}`,
           game: collected.first().content.toLowerCase(),
           timeframe: time,
+          date: Date.now(),
         };
         await Request.findOneAndUpdate(filter, update, {
           new: true,
