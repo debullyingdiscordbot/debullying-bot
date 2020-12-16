@@ -33,7 +33,6 @@ module.exports = {
   description: 'Matchmake for a game.',
 
   async execute(message, args, client) {
-    // todo: turn the msg and filter into a reusable method later when refactoring. there gonna be some loopidooos and stuff.
     // todo: check user in database and see if they're in the green, if not, return sorry message
     const msg = await message.author.send(greetingMsg);
     const filter = (collected) => collected.author.id === message.author.id;
@@ -49,10 +48,10 @@ module.exports = {
     // todo: get collect.first().content.toLowerCase() and run it through a method that checks if valid game using the big game API
     // todo:
 
-    if (collected.first().content.toLowerCase() === 'cancel')
+    if (collected.first().content.toLowerCase() === 'cancel') {
       return message.author.send('Canceled');
-
-    if (collected.first().content.toLowerCase() === 'overwatch') {
+    } else if (collected.first().content.toLowerCase() === 'overwatch') {
+      // } else if (collected.first().content.toLowerCase() === a valid game from the api) {
       const newMsg = await message.author.send(foundGameMsg).then((embedMsg) => {
         embedMsg.react('💙');
         embedMsg.react('💚');
@@ -98,7 +97,10 @@ module.exports = {
         default:
           time = 0;
       }
-      // checks to see if user already have existing request before processing
+      // TODO: method to check if another user in the Request collection wants to play the same game for same time
+      // checkDbForMatch() ????????????????????
+
+      // checks to see if user has existing request before processing
       updateOrCreateRequest(time);
     };
 
