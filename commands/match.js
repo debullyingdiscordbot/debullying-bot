@@ -28,6 +28,15 @@ const postReactionMsg = new MessageEmbed()
   .setColor('blue')
   .setFooter('footer goes here');
 
+// todo: refactor all that crap above this line to a reusable method below
+const embedMessage = (title, description, sideColor, footer) => {
+  new MessageEmbed()
+    .setTitle(title)
+    .setDescription(description)
+    .setColor(sideColor)
+    .setFooter(footer);
+};
+
 module.exports = {
   name: 'match',
   description: 'Matchmake for a game.',

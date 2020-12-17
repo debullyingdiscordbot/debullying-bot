@@ -19,12 +19,35 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // todo: add some kinda level to gamify
   goodPersonRank: {
     type: Number,
     default: 0,
   },
-
-  // todo: add some kinda level to gamify
+  botCalledAmount: {
+    type: Number,
+    default: 0,
+  },
+  totalTimePlayed: {
+    type: Number,
+    default: 0,
+  },
+  successfulMatches: {
+    type: Number,
+    default: 0,
+  },
+  failedMatches: {
+    type: Number,
+    default: 0,
+  },
+  positiveGames: {
+    type: Number,
+    default: 0,
+  },
+  negativeGames: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model('User', UserSchema);
