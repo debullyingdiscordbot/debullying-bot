@@ -1,8 +1,9 @@
 const chalk = require('chalk');
-const moment = require('moment');
+// const moment = require('moment');
+const format = require('date-fns/format');
 
 exports.log = (content, type = 'log') => {
-  const timestamp = `[${moment().format('DD-MM-YY H:m:s')}]:`;
+  const timestamp = `[${format(new Date(), 'MM-dd-yyyy H:mma')}]:`;
   switch (type) {
     case 'log': {
       return console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${content} `);

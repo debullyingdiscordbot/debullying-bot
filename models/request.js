@@ -7,6 +7,10 @@ const RequestSchema = new mongoose.Schema(
     game: String,
     timeframe: Number,
     date: { type: Date, default: Date.now },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   }
   // { timestamps: true }
 );
