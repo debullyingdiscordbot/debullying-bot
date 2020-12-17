@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-// const User = require('../models/user');
+const User = require('../models/user');
 const Request = require('../models/request');
 
 const foundGameMsg = new MessageEmbed()
@@ -133,13 +133,26 @@ module.exports = {
         // todo: link relationship between request and user
         // todo: user field for botCalledAmount can be user.request.length
 
+        // todo: move this crap into a controller
         const req = new Request({
           id: message.author.id,
           username: `${message.author.username}#${message.author.discriminator}`,
           game: collected.first().content.toLowerCase(),
           timeframe: time,
+          user: message.author._id,
         });
+        // req.user = user._id;
         await req.save();
+
+        const user = await User.findOne({ id: message.author.id });
+
+        user.requests.push(req);
+        await user.save();
+
+        // console.log(user.populate('Request'));
+        console.log(user.requests[0]);
+
+        // await req.save();
         await message.author.send(postReactionMsg);
       } catch (error) {
         console.error(error);
