@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
-const User = require('../models/user');
-const Request = require('../models/request');
+const User = require('../database/models/user');
+const Request = require('../database/models/request');
 
 const foundGameMsg = new MessageEmbed()
   .setTitle('PLaceholder Title')

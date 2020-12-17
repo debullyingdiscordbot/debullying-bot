@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../database/models/user');
 
 module.exports = {
   name: 'ping',
