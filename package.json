@@ -21,9 +21,9 @@
   "homepage": "https://github.com/debullyingdiscordbot/debullying-bot#readme",
   "dependencies": {
     "chalk": "^4.1.0",
+    "date-fns": "^2.16.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "moment": "^2.29.1",
     "mongoose": "^5.11.1"
   }
 }

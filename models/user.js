@@ -48,6 +48,12 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Request',
+    },
+  ],
 });
 
 module.exports = mongoose.model('User', UserSchema);
