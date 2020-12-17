@@ -6,6 +6,10 @@ const RequestSchema = new mongoose.Schema(
     username: String,
     game: String,
     timeframe: Number,
+    fulfilled: {
+      type: Boolean,
+      default: false,
+    },
     date: { type: Date, default: Date.now },
     user: {
       type: mongoose.Schema.Types.ObjectId,

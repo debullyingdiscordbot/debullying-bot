@@ -1,5 +1,4 @@
 const chalk = require('chalk');
-// const moment = require('moment');
 const format = require('date-fns/format');
 
 exports.log = (content, type = 'log') => {

@@ -116,19 +116,31 @@ module.exports = {
 
     const updateOrCreateRequest = async (time) => {
       try {
-        const filter = { id: message.author.id };
-        const update = {
+        // the chunk of commented out text below finds and updates a single request. after the team discussed, we want to log every single request to get some data
+
+        // const filter = { id: message.author.id };
+        // const update = {
+        //   username: `${message.author.username}#${message.author.discriminator}`,
+        //   game: collected.first().content.toLowerCase(),
+        //   timeframe: time,
+        //   date: Date.now(),
+        // };
+        // await Request.findOneAndUpdate(filter, update, {
+        //   new: true,
+        //   upsert: true,
+        // });
+
+        // todo: link relationship between request and user
+        // todo: user field for botCalledAmount can be user.request.length
+
+        const req = new Request({
+          id: message.author.id,
           username: `${message.author.username}#${message.author.discriminator}`,
           game: collected.first().content.toLowerCase(),
           timeframe: time,
-          date: Date.now(),
-        };
-        await Request.findOneAndUpdate(filter, update, {
-          new: true,
-          upsert: true,
         });
-
-        message.author.send(postReactionMsg);
+        await req.save();
+        await message.author.send(postReactionMsg);
       } catch (error) {
         console.error(error);
       }
