@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  failedMatches: {
+  unsuccessfulMatches: {
     type: Number,
     default: 0,
   },
