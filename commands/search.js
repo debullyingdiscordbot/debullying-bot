@@ -16,20 +16,18 @@ module.exports = {
   name: 'search',
   description: 'search db for players playing game',
   async execute(message, args, client) {
-    console.log(args);
-
     try {
       const req = await Request.find({
         game: args.join(' ').toLowerCase(),
       });
-      console.log(req);
 
-      // let msg = await message.author.send(
-      //   `We found ${req.length} match. Would you like to send them a message? `
-      // );
-
+      if (req.length === 0) return message.author.send('no game found');
       const newMsg = await message.author
-        .send(`We found ${req.length} match. Would you like to send them a message? `)
+        .send(
+          `We found ${req.length} match${
+            req.length === 1 ? '' : 'es'
+          }. Would you like to send them a message? todo: embed this msg`
+        )
         .then((embedMsg) => {
           embedMsg.react('👍');
           embedMsg.react('👎');
@@ -42,16 +40,23 @@ module.exports = {
               { max: 1, time: 60000 }
             )
             .then((reaction) => {
-              message.author.send('aslkdjflasdfl');
+              if (reaction.first().emoji.name == '👍') {
+                const randomMatch = req[Math.floor(Math.random() * req.length)].username;
+                message.author.send(
+                  `Go ahead and send a message to ${randomMatch}. I will notify them about you as well. (not yet implemented)`
+                );
+              } else {
+                message.author.send('aslkdjflasdfl');
+              }
               // processReaction(reaction.first().emoji.name);
             })
-            .catch(() => {
+            .catch((err) => {
+              console.error(err);
               message.author.send('No reaction after 60 seconds, operation canceled');
             });
         });
       // req returns an array of all the games found
       // check with team tomrorow to see if we should return random match
-      if (req.length === 0) message.reply('no game found sorry fam');
     } catch (error) {
       console.error(error);
     }
