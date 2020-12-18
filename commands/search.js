@@ -43,7 +43,7 @@ module.exports = {
               if (reaction.first().emoji.name == '👍') {
                 const randomMatch = req[Math.floor(Math.random() * req.length)].username;
                 message.author.send(
-                  `Go ahead and send a message to ${randomMatch}. I will notify them about you as well. (not yet implemented)`
+                  `Go ahead and send a message to **${randomMatch}**. I will notify them about you as well. (not yet implemented)`
                 );
               } else {
                 message.author.send('aslkdjflasdfl');

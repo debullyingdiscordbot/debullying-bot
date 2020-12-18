@@ -21,3 +21,27 @@ module.exports.getUser = async (userID, message) => {
     console.error(err);
   }
 };
+
+// create match make request
+module.exports.createRequest = async (message, game, time) => {
+  try {
+    let user = await User.findOne({ id: message.author.id });
+
+    let req = new Request({
+      // todo: change id to something like userid in request model
+      id: message.author.id,
+      username: `${message.author.username}#${message.author.discriminator}`,
+      game,
+      timeframe: time,
+      user: message.author._id,
+    });
+
+    await req.save();
+    user.requests.push(req);
+    await user.save();
+
+    console.log('added match request to db');
+  } catch (err) {
+    console.error(err);
+  }
+};
