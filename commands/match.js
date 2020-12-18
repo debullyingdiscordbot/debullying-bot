@@ -2,6 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const User = require('../database/models/user');
 const Request = require('../database/models/request');
 
+const { createRequest } = require('../database/MongoDB');
+
 const foundGameMsg = new MessageEmbed()
   .setTitle('PLaceholder Title')
   .setDescription(
@@ -133,26 +135,10 @@ module.exports = {
         // todo: link relationship between request and user
         // todo: user field for botCalledAmount can be user.request.length
 
-        // todo: move this crap into a controller
-        const req = new Request({
-          id: message.author.id,
-          username: `${message.author.username}#${message.author.discriminator}`,
-          game: collected.first().content.toLowerCase(),
-          timeframe: time,
-          user: message.author._id,
-        });
-        // req.user = user._id;
-        await req.save();
+        let game = collected.first().content.toLowerCase();
 
-        const user = await User.findOne({ id: message.author.id });
+        await createRequest(message, game, time);
 
-        user.requests.push(req);
-        await user.save();
-
-        // console.log(user.populate('Request'));
-        console.log(user.requests[0]);
-
-        // await req.save();
         await message.author.send(postReactionMsg);
       } catch (error) {
         console.error(error);
