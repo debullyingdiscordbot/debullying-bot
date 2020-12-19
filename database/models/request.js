@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const RequestSchema = new mongoose.Schema(
   {
-    id: String,
+    userId: String,
     username: String,
     game: String,
     timeframe: Number,
@@ -11,6 +11,7 @@ const RequestSchema = new mongoose.Schema(
       default: false,
     },
     guildId: String,
+    guildName: String,
     date: { type: Date, default: Date.now },
     user: {
       type: mongoose.Schema.Types.ObjectId,
