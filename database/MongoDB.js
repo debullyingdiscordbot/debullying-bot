@@ -29,10 +29,12 @@ module.exports.createRequest = async (message, game, time) => {
 
     let req = new Request({
       // todo: change id to something like userid in request model
-      id: message.author.id,
+      userId: message.author.id,
       username: `${message.author.username}#${message.author.discriminator}`,
       game,
       timeframe: time,
+      guildId: message.guild.id,
+      guildName: message.guild.name,
       user: message.author._id,
     });
 

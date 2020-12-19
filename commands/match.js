@@ -1,19 +1,26 @@
 const { MessageEmbed } = require('discord.js');
-const User = require('../database/models/user');
-const Request = require('../database/models/request');
-
 const { createRequest } = require('../database/MongoDB');
 
-const foundGameMsg = new MessageEmbed()
-  .setTitle('PLaceholder Title')
-  .setDescription(
-    'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
-  )
-  .setColor('blue')
-  .setFooter(
-    'Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
+const foundGameMsg = (game) => {
+  return (
+    new MessageEmbed()
+      // titlecase the game
+      .setTitle(
+        game
+          .split('_')
+          .filter((x) => x.length > 0)
+          .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
+          .join(' ')
+      )
+      .setDescription(
+        'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
+      )
+      .setColor('blue')
+      .setFooter(
+        'Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
+      )
   );
-
+};
 const greetingMsg = new MessageEmbed()
   .setTitle('placeholder title')
   .setDescription(
@@ -25,7 +32,7 @@ const greetingMsg = new MessageEmbed()
 const postReactionMsg = new MessageEmbed()
   .setTitle('Title goes here')
   .setDescription(
-    "Excellent, I'll message here for you match. You'll need to react with an emoji to begin the chat with your match. \nIn the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up."
+    "Excellent, I'll message here for your match. You'll need to react with an emoji to begin the chat with your match. \nIn the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up."
   )
   .setColor('blue')
   .setFooter('footer goes here');
@@ -58,35 +65,37 @@ module.exports = {
 
     // todo: get collect.first().content.toLowerCase() and run it through a method that checks if valid game using the big game API
     // todo:
+    let selectedGame = collected.first().content.toLowerCase();
 
-    if (collected.first().content.toLowerCase() === 'cancel') {
+    if (selectedGame === 'cancel') {
       return message.author.send('Canceled');
-    } else {
-      // } else if (collected.first().content.toLowerCase() === 'overwatch') {
       // } else if (collected.first().content.toLowerCase() === a valid game from the api) {
-      const newMsg = await message.author.send(foundGameMsg).then((embedMsg) => {
-        embedMsg.react('💙');
-        embedMsg.react('💚');
-        embedMsg.react('❤️');
-        embedMsg.react('💛');
+    } else {
+      const newMsg = await message.author
+        .send(foundGameMsg(selectedGame))
+        .then((embedMsg) => {
+          embedMsg.react('💙');
+          embedMsg.react('💚');
+          embedMsg.react('❤️');
+          embedMsg.react('💛');
 
-        embedMsg
-          .awaitReactions(
-            (reaction, user) =>
-              user.id == message.author.id &&
-              (reaction.emoji.name == '💙' ||
-                reaction.emoji.name == '💚' ||
-                reaction.emoji.name == '❤️' ||
-                reaction.emoji.name == '💛'),
-            { max: 1, time: 60000 }
-          )
-          .then((reaction) => {
-            processReaction(reaction.first().emoji.name);
-          })
-          .catch(() => {
-            message.author.send('No reaction after 60 seconds, operation canceled');
-          });
-      });
+          embedMsg
+            .awaitReactions(
+              (reaction, user) =>
+                user.id == message.author.id &&
+                (reaction.emoji.name == '💙' ||
+                  reaction.emoji.name == '💚' ||
+                  reaction.emoji.name == '❤️' ||
+                  reaction.emoji.name == '💛'),
+              { max: 1, time: 60000 }
+            )
+            .then((reaction) => {
+              processReaction(reaction.first().emoji.name);
+            })
+            .catch(() => {
+              message.author.send('No reaction after 60 seconds, operation canceled');
+            });
+        });
     }
 
     // helpers
@@ -112,28 +121,11 @@ module.exports = {
       // TODO: method to check if another user in the Request collection wants to play the same game for same time
       // checkDbForMatch() ????????????????????
 
-      // checks to see if user has existing request before processing
-      updateOrCreateRequest(time);
-    };
-
-    const updateOrCreateRequest = async (time) => {
       try {
-        // the chunk of commented out text below finds and updates a single request. after the team discussed, we want to log every single request to get some data
-
-        // const filter = { id: message.author.id };
-        // const update = {
-        //   username: `${message.author.username}#${message.author.discriminator}`,
-        //   game: collected.first().content.toLowerCase(),
-        //   timeframe: time,
-        //   date: Date.now(),
-        // };
-        // await Request.findOneAndUpdate(filter, update, {
-        //   new: true,
-        //   upsert: true,
-        // });
-
         // todo: link relationship between request and user
         // todo: user field for botCalledAmount can be user.request.length
+
+        // console.log(message.guild);
 
         let game = collected.first().content.toLowerCase();
 
