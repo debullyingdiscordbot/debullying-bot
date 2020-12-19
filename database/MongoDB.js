@@ -50,11 +50,15 @@ module.exports.createRequest = async (message, game, time) => {
 
 module.exports.getUserMatchFeedback = async (reaction, userId) => {
   let update;
-  if (reaction == '👍') {
-    update = { $inc: { positiveGames: 1 } };
-  } else {
-    update = { $inc: { negativeGames: 1 } };
-  }
+  // if (reaction == '👍') {
+  //   update = { $inc: { positiveGames: 1 } };
+  // } else {
+  //   update = { $inc: { negativeGames: 1 } };
+  // }
+
+  reaction == '👍'
+    ? (update = { $inc: { positiveGames: 1 } })
+    : (update = { $inc: { negativeGames: 1 } });
 
   try {
     const filter = { id: userId };

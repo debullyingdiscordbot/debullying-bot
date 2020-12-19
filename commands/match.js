@@ -143,8 +143,7 @@ module.exports = {
               { max: 1, time: 60000 }
             )
             .then((reaction) => {
-              console.log(reaction.author);
-              // processReaction(reaction.first().emoji.name);
+              // pass in thumb reaction and userid
               getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
             })
             .catch(() => {
