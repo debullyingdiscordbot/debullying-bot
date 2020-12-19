@@ -47,3 +47,22 @@ module.exports.createRequest = async (message, game, time) => {
     console.error(err);
   }
 };
+
+module.exports.getUserMatchFeedback = async (reaction, userId) => {
+  let update;
+  if (reaction == '👍') {
+    update = { $inc: { positiveGames: 1 } };
+  } else {
+    update = { $inc: { negativeGames: 1 } };
+  }
+
+  try {
+    const filter = { id: userId };
+
+    let user = await User.findOneAndUpdate(filter, update, { new: true });
+
+    console.log(user);
+  } catch (err) {
+    console.error(err);
+  }
+};

@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { createRequest } = require('../database/MongoDB');
+const { createRequest, getUserMatchFeedback } = require('../database/MongoDB');
 
 const foundGameMsg = (game) => {
   return (
@@ -35,7 +35,7 @@ const postReactionMsg = new MessageEmbed()
     "Excellent, I'll message here for your match. You'll need to react with an emoji to begin the chat with your match. \nIn the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up."
   )
   .setColor('blue')
-  .setFooter('footer goes here');
+  .setFooter('Did you enjoy your last match?');
 
 // todo: refactor all that crap above this line to a reusable method below
 const embedMessage = (title, description, sideColor, footer) => {
@@ -131,7 +131,26 @@ module.exports = {
 
         await createRequest(message, game, time);
 
-        await message.author.send(postReactionMsg);
+        await message.author.send(postReactionMsg).then((msg) => {
+          msg.react('👍');
+          msg.react('👎');
+
+          msg
+            .awaitReactions(
+              (reaction, user) =>
+                user.id == message.author.id &&
+                (reaction.emoji.name == '👍' || reaction.emoji.name == '👎'),
+              { max: 1, time: 60000 }
+            )
+            .then((reaction) => {
+              console.log(reaction.author);
+              // processReaction(reaction.first().emoji.name);
+              getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
+            })
+            .catch(() => {
+              message.author.send('No reaction after 60 seconds, operation canceled');
+            });
+        });
       } catch (error) {
         console.error(error);
       }
