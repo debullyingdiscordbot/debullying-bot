@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const User = require('../database/models/user');
 const Request = require('../database/models/request');
 
+// todo: move all the message methods into another file??
 const foundGameMsg = (matches) => {
   return new MessageEmbed()
     .setTitle(`We found ${matches} match${matches === 1 ? '' : 'es'}`)
