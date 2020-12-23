@@ -16,6 +16,8 @@ const foundGameMsg = (game) => {
         'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
       )
       .setColor('blue')
+      // todo: add thumbnail??
+      // .setThumbnail(message.guild.iconURL())
       .setFooter(
         'Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
       )
@@ -122,10 +124,7 @@ module.exports = {
       // checkDbForMatch() ????????????????????
 
       try {
-        // todo: link relationship between request and user
         // todo: user field for botCalledAmount can be user.request.length
-
-        // console.log(message.guild);
 
         let game = collected.first().content.toLowerCase();
 
