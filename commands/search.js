@@ -12,14 +12,16 @@ const foundGameMsg = (matches) => {
           ? 'Would you like to connect with them?'
           : 'Would you like to connect with one of them?'
       }`
-    );
+    )
+    .setColor('#7122E3');
 };
 const foundMatchMsg = (player) => {
   return new MessageEmbed()
     .setTitle(`Enjoy your game`)
     .setDescription(
       `Go ahead and send a message to **${player}**. I will notify them about you as well. (not yet implemented)`
-    );
+    )
+    .setColor('#7122E3');
 };
 module.exports = {
   name: 'search',
