@@ -15,7 +15,7 @@ const foundGameMsg = (game) => {
       .setDescription(
         'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
       )
-      .setColor('blue')
+      .setColor('#7122E3')
       // todo: add thumbnail??
       // .setThumbnail(message.guild.iconURL())
       .setFooter(
@@ -28,7 +28,7 @@ const greetingMsg = new MessageEmbed()
   .setDescription(
     "Welcome, let's get you paired to play. I have 2 questions I need answers for. \n1. What game do you want to play? Please type out the exact title."
   )
-  .setColor('blue')
+  .setColor('#7122E3')
   .setFooter('placeholder footer');
 
 const postReactionMsg = new MessageEmbed()
