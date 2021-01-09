@@ -1,6 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 const User = require('../database/models/user');
-const Request = require('../database/models/request');
 
 const viewUserMsg = (user) => {
   return new MessageEmbed()
@@ -31,13 +30,14 @@ module.exports = {
       if (args.length === 0) return message.author.send('Please provide ID');
 
       if (user) {
-        console.log(user);
+        // console.log(user);
         message.author.send(viewUserMsg(user));
       } else {
         message.author.send(noUserMsg());
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      client.logger.error(error);
     }
   },
 };

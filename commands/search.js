@@ -3,6 +3,14 @@ const User = require('../database/models/user');
 const Request = require('../database/models/request');
 
 // todo: move all the message methods into another file??
+const SearchingMsg = () => {
+  return new MessageEmbed()
+    .setTitle('Searching for Players 🔎')
+    .setDescription(`placeholder`)
+    .setFooter('Tip: Stretch your hands out. This might take some time.')
+    .setColor(process.env.EMBED_COLOR);
+};
+
 const foundGameMsg = (matches) => {
   return new MessageEmbed()
     .setTitle(`We found ${matches} match${matches === 1 ? '' : 'es'}`)
@@ -23,6 +31,14 @@ const foundMatchMsg = (player) => {
     )
     .setColor(process.env.EMBED_COLOR);
 };
+
+const noMatchMsg = (game) => {
+  return new MessageEmbed()
+    .setTitle(`No Player Found.`)
+    .setDescription(`No one is playing ${game} at the moment.`)
+    .setFooter('Tip: Use !match to add a request to the queue or try a different game.')
+    .setColor(process.env.EMBED_COLOR);
+};
 module.exports = {
   name: 'search',
   description: 'search db for players playing game',
@@ -32,7 +48,8 @@ module.exports = {
         game: args.join(' ').toLowerCase(),
       });
 
-      if (req.length === 0) return message.author.send('no game found');
+      message.author.send(SearchingMsg());
+      if (req.length === 0) return message.author.send(noMatchMsg(args.join(' ')));
       const newMsg = await message.author
         .send(foundGameMsg(req.length))
         .then((embedMsg) => {

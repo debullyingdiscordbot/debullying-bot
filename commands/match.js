@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { createRequest, getUserMatchFeedback } = require('../database/MongoDB');
+const { getUser, createRequest, getUserMatchFeedback } = require('../database/MongoDB');
 
 const foundGameMsg = (game) => {
   return (
@@ -19,24 +19,26 @@ const foundGameMsg = (game) => {
       // todo: add thumbnail??
       // .setThumbnail(message.guild.iconURL())
       .setFooter(
-        'Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
+        'Tip: Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
       )
   );
 };
 const greetingMsg = new MessageEmbed()
-  .setTitle('placeholder title')
+  .setTitle("Welcome, let's get you paired to play.")
   .setDescription(
-    "Welcome, let's get you paired to play. I have 2 questions I need answers for. \n1. What game do you want to play? Please type out the exact title."
+    `I have 2 questions I need answers for.
+     1. What game do you want to play?`
   )
   .setColor(process.env.EMBED_COLOR)
-  .setFooter('placeholder footer');
+  .setFooter('Tip: Type out exact title');
 
 const postReactionMsg = new MessageEmbed()
-  .setTitle('Title goes here')
+  .setTitle("Excellent, I'll dm you for your match.")
   .setDescription(
-    "Excellent, I'll message here for your match. You'll need to react with an emoji to begin the chat with your match. \nIn the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up."
+    `You'll need to react with an emoji to begin the chat with your match. 
+    In the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up.`
   )
-  .setColor('blue')
+  .setColor(process.env.EMBED_COLOR)
   .setFooter('Did you enjoy your last match?');
 
 // todo: refactor all that crap above this line to a reusable method below
@@ -128,6 +130,7 @@ module.exports = {
 
         let game = collected.first().content.toLowerCase();
 
+        await getUser(message.author.id, message);
         await createRequest(message, game, time);
 
         await message.author.send(postReactionMsg).then((msg) => {
@@ -143,9 +146,11 @@ module.exports = {
             )
             .then((reaction) => {
               // pass in thumb reaction and userid
+              // let user = getUser(message.author.id, message);
               getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
             })
-            .catch(() => {
+            .catch((err) => {
+              client.logger.error(err);
               message.author.send('No reaction after 60 seconds, operation canceled');
             });
         });
