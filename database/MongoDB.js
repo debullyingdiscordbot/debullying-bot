@@ -4,7 +4,7 @@ const Request = require('./models/request');
 const Guild = require('./models/guild');
 
 // create or find user
-module.exports.getUser = async (user) => {
+module.exports.findOrCreateUser = async (user) => {
   try {
     let foundUser = await User.findOne({ id: user.userID });
     if (foundUser) {
