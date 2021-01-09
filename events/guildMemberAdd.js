@@ -1,6 +1,10 @@
 const { MessageEmbed } = require('discord.js');
+const { getUser } = require('../database/MongoDB');
 
 module.exports = async (client, member) => {
+  const user = await getUser(member.user);
+
+  // console.log(user);
   member.send('hello there!!!!!!!');
 
   const channel = member.guild.channels.cache.find(
