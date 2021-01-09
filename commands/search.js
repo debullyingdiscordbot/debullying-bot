@@ -13,7 +13,7 @@ const foundGameMsg = (matches) => {
           : 'Would you like to connect with one of them?'
       }`
     )
-    .setColor('#7122E3');
+    .setColor(process.env.EMBED_COLOR);
 };
 const foundMatchMsg = (player) => {
   return new MessageEmbed()
@@ -21,7 +21,7 @@ const foundMatchMsg = (player) => {
     .setDescription(
       `Go ahead and send a message to **${player}**. I will notify them about you as well. (not yet implemented)`
     )
-    .setColor('#7122E3');
+    .setColor(process.env.EMBED_COLOR);
 };
 module.exports = {
   name: 'search',

@@ -6,7 +6,7 @@ module.exports = {
   async execute(message, args, client) {
     message.reply('test');
     const embed = new MessageEmbed()
-      .setColor('#7122E3')
+      .setColor(process.env.EMBED_COLOR)
       .setTitle(message.guild.name)
       // .setThumbnail(message.guild.iconURL())
       .setDescription('Here is some information I found for this server.')
