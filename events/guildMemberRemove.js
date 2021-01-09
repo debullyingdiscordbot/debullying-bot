@@ -7,9 +7,9 @@ module.exports = async (client, member) => {
   if (!channel) return;
 
   const embedMsg = new MessageEmbed()
-    .setTitle(`A new member has departed`)
+    .setTitle(`A member has departed`)
     .setDescription(`${member} has left the server`)
-    .setColor('#FF0000');
+    .setColor(process.env.EMBED_COLOR);
 
   channel.send(embedMsg);
 };

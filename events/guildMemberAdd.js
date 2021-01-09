@@ -6,9 +6,11 @@ const welcomeMsg = (guild) => {
     .setTitle(`Welcome to ${guild}`)
     .setDescription(
       `
+      list some rules here
       list some commands here
     `
     )
+    .setFooter('Have fun and -----')
     .setColor(process.env.EMBED_COLOR);
 };
 
