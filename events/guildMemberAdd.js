@@ -15,7 +15,11 @@ const welcomeMsg = (guild) => {
 };
 
 module.exports = async (client, member) => {
-  const user = await findOrCreateUser(member.user);
+  await findOrCreateUser(member.user);
+
+  client.logger.event(
+    `${member.user.username}#${member.user.discriminator} has joined ${member.guild.name}.`
+  );
 
   member.send(welcomeMsg(member.guild.name));
 
