@@ -70,7 +70,28 @@ module.exports.getUserMatchFeedback = async (reaction, userId) => {
 module.exports.increaseKickCount = async (id) => {
   try {
     // console.log(id);
-    let user = await User.findOneAndUpdate({ id }, { $inc: { kickCount: 1 } });
+    let user = await User.findOneAndUpdate(
+      {
+        id,
+      },
+      { $inc: { kickCount: 1 } }
+    );
+    console.log(user);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports.increaseBanCount = async (id) => {
+  try {
+    let user = await User.findOneAndUpdate(
+      {
+        id,
+      },
+      {
+        $inc: { banCount: 1 },
+      }
+    );
     console.log(user);
   } catch (error) {
     console.error(error);
