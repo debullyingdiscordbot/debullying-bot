@@ -1,4 +1,6 @@
 // const mongoose = require('mongoose');
+// const igdb = require('igdb-api-node');
+const axios = require('axios').default;
 const User = require('../database/models/user');
 const { getUser } = require('../database/MongoDB');
 
@@ -9,22 +11,19 @@ module.exports = {
     // console.log(message.author);
 
     // todos: search db if user exist, if not, create
-
+    // console.log(process.env.IGDB_ACCESS_TOKEN);
     try {
-      // const filter = { id: message.author.id };
-      // const update = {
-      //   username: `${message.author.username}#${message.author.discriminator}`,
-      // };
-      // let user = await User.findOneAndUpdate(filter, update);
-      // if (!user) {
-      //   const newUser = new User({
-      //     id: message.author.id,
-      //     username: `${message.author.username}#${message.author.discriminator}`,
-      //   });
-      //   await newUser.save();
-      const user = await getUser(message.author.id, message);
-      console.log(user);
-      message.author.send(JSON.stringify(user));
+      const res = await axios({
+        url: 'https://api.igdb.com/v4/games/',
+        method: 'POST',
+        headers: {
+          // Accept: 'application/json',
+          Client_ID: process.env.IGDB_CLIENT_ID,
+          Authorization: 'Bearer ' + process.env.IGDB_ACCESS_TOKEN,
+        },
+        data: 'fields *',
+      });
+      console.log(res);
 
       // console.log(user);
     } catch (error) {
