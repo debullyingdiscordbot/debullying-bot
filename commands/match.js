@@ -130,7 +130,8 @@ module.exports = {
 
         let game = collected.first().content.toLowerCase();
 
-        await getUser(message.author.id, message);
+        // todo: move the get user somewhere earlier
+        await getUser(message.author);
         await createRequest(message, game, time);
 
         await message.author.send(postReactionMsg).then((msg) => {
@@ -146,7 +147,7 @@ module.exports = {
             )
             .then((reaction) => {
               // pass in thumb reaction and userid
-              // let user = getUser(message.author.id, message);
+
               getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
             })
             .catch((err) => {

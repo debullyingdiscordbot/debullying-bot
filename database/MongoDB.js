@@ -4,15 +4,16 @@ const Request = require('./models/request');
 const Guild = require('./models/guild');
 
 // create or find user
-module.exports.getUser = async (userID, message) => {
+module.exports.getUser = async (user) => {
   try {
-    let user = await User.findOne({ id: userID });
-    if (user) {
-      return user;
+    let foundUser = await User.findOne({ id: user.userID });
+    if (foundUser) {
+      return foundUser;
     } else {
+      // console.log(user);
       user = new User({
-        id: userID,
-        username: `${message.author.username}#${message.author.discriminator}`,
+        id: user.id,
+        username: `${user.username}#${user.discriminator}`,
       });
       await user.save();
       return user;
