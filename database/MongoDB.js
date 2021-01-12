@@ -55,7 +55,8 @@ module.exports.checkDbForMatch = async (time, game) => {
     timeframe: time,
   });
 
-  console.log(found);
+  // console.log(found);
+  return found;
 };
 
 module.exports.getUserMatchFeedback = async (reaction, userId) => {

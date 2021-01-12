@@ -127,54 +127,15 @@ module.exports = {
         default:
           time = 0;
       }
-      // TODO: method to check if another user in the Request collection wants to play the same game for same time
-      checkDbForMatch(time, selectedGame);
-
-      // addRequestToDb(time);
-      // try {
-      //   // todo: user field for botCalledAmount can be user.request.length
-
-      //   let game = collected.first().content.toLowerCase();
-
-      //   // todo: move the get user somewhere earlier
-      //   await findOrCreateUser(message.author);
-      //   await createRequest(message, game, time);
-
-      //   await message.author.send(postReactionMsg).then((msg) => {
-      //     msg.react('👍');
-      //     msg.react('👎');
-
-      //     msg
-      //       .awaitReactions(
-      //         (reaction, user) =>
-      //           user.id == message.author.id &&
-      //           (reaction.emoji.name == '👍' || reaction.emoji.name == '👎'),
-      //         { max: 1, time: 60000 }
-      //       )
-      //       .then((reaction) => {
-      //         // pass in thumb reaction and userid
-
-      //         getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
-      //       })
-      //       .catch((err) => {
-      //         client.logger.error(err);
-      //         message.author.send('No reaction after 60 seconds, operation canceled');
-      //       });
-      //   });
-      // } catch (error) {
-      //   console.error(error);
-      // }
+      // heck if another user in the Request collection wants to play the same game for same time
+      const found = await checkDbForMatch(time, selectedGame);
+      if (Array.isArray(found) && found.length) {
+        // TODO: GIVE EMOJI OPTIONS TO say yes or no to found matches.
+        message.author.send(`We found ${found.length} matches, you in??`);
+      } else {
+        addRequestToDb(time);
+      }
     };
-
-    // const checkDbForMatch = async (time) => {
-    //   // let game = collected.first().content.toLowerCase()
-    //   const found = await Request.find({
-    //     game: collected.first().content.toLowerCase(),
-    //     timeframe: time,
-    //   });
-
-    //   console.log(found);
-    // };
 
     const addRequestToDb = async (time) => {
       try {
