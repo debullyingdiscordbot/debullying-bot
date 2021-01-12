@@ -49,6 +49,15 @@ module.exports.createRequest = async (message, game, time) => {
   }
 };
 
+module.exports.checkDbForMatch = async (time, game) => {
+  const found = await Request.find({
+    game,
+    timeframe: time,
+  });
+
+  console.log(found);
+};
+
 module.exports.getUserMatchFeedback = async (reaction, userId) => {
   let update;
 
