@@ -116,3 +116,12 @@ module.exports.increaseMuteCount = async (id) => {
     console.error(error);
   }
 };
+
+module.exports.increaseWarnCount = async (id) => {
+  try {
+    let user = await User.findOneAndUpdate({ id }, { $inc: { warnCount: 1 } });
+    console.log(user);
+  } catch (error) {
+    console.error(error);
+  }
+};
