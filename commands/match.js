@@ -82,16 +82,15 @@ module.exports = {
       const found = await checkDbForMatch(time, selectedGame);
       if (Array.isArray(found) && found.length) {
         // TODO: GIVE EMOJI OPTIONS TO say yes or no to found matches.
-        const msg = await message.author.send(foundPlayersMsg(found.length));
-        await linkUpWithMatch(found.length);
+        await linkUpWithMatch(found);
       } else {
         addRequestToDb(time);
       }
     };
 
-    const linkUpWithMatch = async (amount) => {
+    const linkUpWithMatch = async (foundMatches) => {
       try {
-        await message.author.send(foundPlayersMsg(amount)).then((msg) => {
+        await message.author.send(foundPlayersMsg(foundMatches.length)).then((msg) => {
           msg.react('👍');
           msg.react('👎');
 
@@ -105,10 +104,16 @@ module.exports = {
             .then((reaction) => {
               if (reaction.first().emoji.name == '👍') {
                 // todo: send them name of random match
-                console.log('pick one and send msg here');
+                const randomMatch =
+                  foundMatches[Math.floor(Math.random() * foundMatches.length)].username;
+                message.author.send(
+                  embedMessage(
+                    `Slide into ${randomMatch}'s DMs. I will notify them as well (not yet implemented)`
+                  )
+                );
               } else {
                 // todo: send farewell cya bye bye msg
-                console.log('okay have a nice day');
+                message.author.send(embedMessage('bye? or add them to db??'));
               }
             })
             .catch((err) => {
@@ -143,8 +148,6 @@ module.exports = {
               { max: 1, time: 60000 }
             )
             .then((reaction) => {
-              // pass in thumb reaction and userid
-
               getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
             })
             .catch((err) => {
@@ -207,10 +210,9 @@ const foundPlayersMsg = (amount) =>
     .setColor(process.env.EMBED_COLOR);
 
 // todo: refactor all that crap above this line to a reusable method below
-const embedMessage = (title, description, sideColor, footer) => {
+const embedMessage = (description) =>
   new MessageEmbed()
-    .setTitle(title)
+    // .setTitle(description)
     .setDescription(description)
-    .setColor(sideColor)
-    .setFooter(footer);
-};
+    .setColor(process.env.EMBED_COLOR);
+// .setFooter(footer);
