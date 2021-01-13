@@ -21,12 +21,14 @@ module.exports = {
       if (member) {
         await increaseWarnCount(member.user.id);
         // member.voice.setMute(true, 'misbehaving');
-        message.channel.send(warnMsg(`<@${member.id}> has been warned.`));
+        message.channel
+          .send(warnMsg(`<@${member.id}> has been warned.`))
+          .then((m) => m.delete({ timeout: 10000 }));
       } else {
-        message.channel.send('That member was not found.');
+        message.channel
+          .send(warnMsg('That member was not found.'))
+          .then((m) => m.delete({ timeout: 5000 }));
       }
-
-      // return message.channel.send(embed);
     } catch (error) {
       console.error(error);
     }
