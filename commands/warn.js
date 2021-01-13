@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { increaseWarnCount } = require('../database/MongoDB');
+const { increaseWarnCount, returnWarnCount } = require('../database/MongoDB');
 
 module.exports = {
   name: 'warn',
@@ -20,10 +20,16 @@ module.exports = {
 
       if (member) {
         await increaseWarnCount(member.user.id);
-        // member.voice.setMute(true, 'misbehaving');
-        message.channel
-          .send(warnMsg(`<@${member.id}> has been warned.`))
-          .then((m) => m.delete({ timeout: 10000 }));
+        message.channel.send(warnMsg(`<@${member.id}> has been warned.`));
+        // .then((m) => m.delete({ timeout: 10000 }));
+
+        let warnCount = await returnWarnCount(member.id);
+
+        member.send(
+          warnMsg(`You've been warned by another user for misbehaving. X more warnings and you will not be able to use The Affirminator's services.
+        
+        Warn count: ${warnCount}`)
+        );
       } else {
         message.channel
           .send(warnMsg('That member was not found.'))
