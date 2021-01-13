@@ -6,55 +6,6 @@ const {
   getUserMatchFeedback,
 } = require('../database/MongoDB');
 
-const foundGameMsg = (game) => {
-  return (
-    new MessageEmbed()
-      // titlecase the game
-      .setTitle(
-        game
-          .split('_')
-          .filter((x) => x.length > 0)
-          .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
-          .join(' ')
-      )
-      .setDescription(
-        'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
-      )
-      .setColor(process.env.EMBED_COLOR)
-      // todo: add thumbnail??
-      // .setThumbnail(message.guild.iconURL())
-      .setFooter(
-        'Tip: Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
-      )
-  );
-};
-const greetingMsg = new MessageEmbed()
-  .setTitle("Welcome, let's get you paired to play.")
-  .setDescription(
-    `I have 2 questions I need answers for.
-     1. What game do you want to play?`
-  )
-  .setColor(process.env.EMBED_COLOR)
-  .setFooter('Tip: Type out exact title');
-
-const postReactionMsg = new MessageEmbed()
-  .setTitle("Excellent, I'll dm you for your match.")
-  .setDescription(
-    `You'll need to react with an emoji to begin the chat with your match. 
-    In the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up.`
-  )
-  .setColor(process.env.EMBED_COLOR)
-  .setFooter('Did you enjoy your last match?');
-
-// todo: refactor all that crap above this line to a reusable method below
-const embedMessage = (title, description, sideColor, footer) => {
-  new MessageEmbed()
-    .setTitle(title)
-    .setDescription(description)
-    .setColor(sideColor)
-    .setFooter(footer);
-};
-
 module.exports = {
   name: 'match',
   description: 'Matchmake for a game.',
@@ -127,13 +78,46 @@ module.exports = {
         default:
           time = 0;
       }
-      // heck if another user in the Request collection wants to play the same game for same time
+      // check if another user in the Request collection wants to play the same game for same time
       const found = await checkDbForMatch(time, selectedGame);
       if (Array.isArray(found) && found.length) {
         // TODO: GIVE EMOJI OPTIONS TO say yes or no to found matches.
-        message.author.send(`We found ${found.length} matches, you in??`);
+        const msg = await message.author.send(foundPlayersMsg(found.length));
+        await linkUpWithMatch(found.length);
       } else {
         addRequestToDb(time);
+      }
+    };
+
+    const linkUpWithMatch = async (amount) => {
+      try {
+        await message.author.send(foundPlayersMsg(amount)).then((msg) => {
+          msg.react('👍');
+          msg.react('👎');
+
+          msg
+            .awaitReactions(
+              (reaction, user) =>
+                user.id == message.author.id &&
+                (reaction.emoji.name == '👍' || reaction.emoji.name == '👎'),
+              { max: 1, time: 60000 }
+            )
+            .then((reaction) => {
+              if (reaction.first().emoji.name == '👍') {
+                // todo: send them name of random match
+                console.log('pick one and send msg here');
+              } else {
+                // todo: send farewell cya bye bye msg
+                console.log('okay have a nice day');
+              }
+            })
+            .catch((err) => {
+              client.logger.error(err);
+              message.author.send('No reaction after 60 seconds, operation canceled');
+            });
+        });
+      } catch (error) {
+        console.error(error);
       }
     };
 
@@ -173,4 +157,60 @@ module.exports = {
       }
     };
   },
+};
+
+// different embeded messages
+
+const foundGameMsg = (game) => {
+  return (
+    new MessageEmbed()
+      // titlecase the game
+      .setTitle(
+        game
+          .split('_')
+          .filter((x) => x.length > 0)
+          .map((x) => x.charAt(0).toUpperCase() + x.slice(1))
+          .join(' ')
+      )
+      .setDescription(
+        'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
+      )
+      .setColor(process.env.EMBED_COLOR)
+      // todo: add thumbnail??
+      // .setThumbnail(message.guild.iconURL())
+      .setFooter(
+        'Tip: Please select the emoji that best matches your time frame.\n\n💙  <30m \n💚  <1hr \n❤️  1hr+ \n💛  3hr+'
+      )
+  );
+};
+const greetingMsg = new MessageEmbed()
+  .setTitle("Welcome, let's get you paired to play.")
+  .setDescription(
+    `I have 2 questions I need answers for.
+     1. What game do you want to play?`
+  )
+  .setColor(process.env.EMBED_COLOR)
+  .setFooter('Tip: Type out exact title');
+
+const postReactionMsg = new MessageEmbed()
+  .setTitle("Excellent, I'll dm you for your match.")
+  .setDescription(
+    `You'll need to react with an emoji to begin the chat with your match. 
+    In the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up.`
+  )
+  .setColor(process.env.EMBED_COLOR)
+  .setFooter('Did you enjoy your last match?');
+
+const foundPlayersMsg = (amount) =>
+  new MessageEmbed()
+    .setDescription(`Found ${amount} matches. Would you like to connect?`)
+    .setColor(process.env.EMBED_COLOR);
+
+// todo: refactor all that crap above this line to a reusable method below
+const embedMessage = (title, description, sideColor, footer) => {
+  new MessageEmbed()
+    .setTitle(title)
+    .setDescription(description)
+    .setColor(sideColor)
+    .setFooter(footer);
 };
