@@ -32,4 +32,5 @@ module.exports = {
   },
 };
 
-const muteMsg = (msg) => new MessageEmbed().setDescription(msg);
+const muteMsg = (msg) =>
+  new MessageEmbed().setDescription(msg).setColor(process.env.EMBED_COLOR);
