@@ -107,3 +107,12 @@ module.exports.increaseBanCount = async (id) => {
     console.error(error);
   }
 };
+
+module.exports.increaseMuteCount = async (id) => {
+  try {
+    let user = await User.findOneAndUpdate({ id }, { $inc: { muteCount: 1 } });
+    console.log(user);
+  } catch (error) {
+    console.error(error);
+  }
+};
