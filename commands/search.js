@@ -46,7 +46,11 @@ module.exports = {
             })
             .catch((err) => {
               console.error(err);
-              message.author.send('No reaction after 60 seconds, operation canceled');
+              message.author.send(
+                embedMessage(
+                  'Sorry, we timed out! Wanna try again? Just ping me back in your server!'
+                )
+              );
             });
         });
     } catch (error) {

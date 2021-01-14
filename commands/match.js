@@ -107,7 +107,7 @@ module.exports = {
                   foundMatches[Math.floor(Math.random() * foundMatches.length)];
                 message.author.send(
                   embedMessage(
-                    `Slide into **${randomMatch.username}**'s DMs. I will notify them as well.`
+                    `Slide into **${randomMatch.username}**'s DMs. I will ping them as well.`
                   )
                 );
                 // sends message to match letting them know match found
@@ -127,7 +127,11 @@ module.exports = {
             })
             .catch((err) => {
               client.logger.error(err);
-              message.author.send('No reaction after 60 seconds, operation canceled');
+              message.author.send(
+                embedMessage(
+                  'Sorry, we timed out! Wanna try again? Just ping me back in your server!'
+                )
+              );
             });
         });
       } catch (error) {
@@ -186,7 +190,9 @@ const foundGameMsg = (game) => {
           .join(' ')
       )
       .setDescription(
-        'Awesome, next question I need to know to match you. \n\n*2. How long do you want to play for?*'
+        `Awesome, thanks!
+        
+        *Next, for how long do you want to play for?*`
       )
       .setColor(process.env.EMBED_COLOR)
       // todo: add thumbnail??
@@ -197,26 +203,25 @@ const foundGameMsg = (game) => {
   );
 };
 const greetingMsg = new MessageEmbed()
-  .setTitle("Welcome, let's get you paired to play.")
+  .setTitle("Hey there! Let's find your Player 2!")
   .setDescription(
-    `I have 2 questions I need answers for.
-     *1. What game do you want to play?*`
+    `Can you answer two questions for me?.
+
+     *First, Which game do you want to play?*`
   )
   .setColor(process.env.EMBED_COLOR)
   .setFooter('Tip: Type out exact title');
 
 const postReactionMsg = new MessageEmbed()
-  .setTitle("Excellent, I'll dm you for your match.")
-  .setDescription(
-    `You'll need to react with an emoji to begin the chat with your match. 
-    In the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up.`
-  )
+  .setTitle("I'll DM you for your match as soon as I can.")
+  .setDescription('Once I do, can you emoji react to get the connection info?')
   .setColor(process.env.EMBED_COLOR);
 // .setFooter('Did you enjoy your last match?');
 
 const foundPlayersMsg = (amount) =>
   new MessageEmbed()
-    .setDescription(`Found ${amount} matches. Would you like to connect?`)
+    .setTitle(`${amount} matches found.`)
+    .setDescription(`Sweet, we found ${amount} matches. Want me to connect you?`)
     .setColor(process.env.EMBED_COLOR);
 
 // todo: refactor all that crap above this line to a reusable method below
