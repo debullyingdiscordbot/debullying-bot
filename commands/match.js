@@ -81,7 +81,6 @@ module.exports = {
       // check if another user in the Request collection wants to play the same game for same time
       const found = await checkDbForMatch(time, selectedGame);
       if (Array.isArray(found) && found.length) {
-        // TODO: GIVE EMOJI OPTIONS TO say yes or no to found matches.
         await linkUpWithMatch(found);
       } else {
         addRequestToDb(time);
@@ -105,12 +104,22 @@ module.exports = {
               if (reaction.first().emoji.name == '👍') {
                 // todo: send them name of random match
                 const randomMatch =
-                  foundMatches[Math.floor(Math.random() * foundMatches.length)].username;
+                  foundMatches[Math.floor(Math.random() * foundMatches.length)];
                 message.author.send(
                   embedMessage(
-                    `Slide into ${randomMatch}'s DMs. I will notify them as well (not yet implemented)`
+                    `Slide into **${randomMatch.username}**'s DMs. I will notify them as well.`
                   )
                 );
+                // sends message to match letting them know match found
+                client.users
+                  .fetch(randomMatch.userId)
+                  .then((user) =>
+                    user.send(
+                      embedMessage(
+                        `A match has been found. Slide into **${message.author.username}#${message.author.discriminator}**'s DMs`
+                      )
+                    )
+                  );
               } else {
                 // todo: send farewell cya bye bye msg
                 message.author.send(embedMessage('bye? or add them to db??'));
