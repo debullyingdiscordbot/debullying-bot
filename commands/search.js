@@ -7,6 +7,7 @@ module.exports = {
   name: 'search',
   description: 'search db for players playing game',
   async execute(message, args, client) {
+    message.delete({ timeout: 1000 });
     try {
       const req = await Request.find({
         game: args.join(' ').toLowerCase(),

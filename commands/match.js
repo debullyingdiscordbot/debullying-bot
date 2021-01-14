@@ -12,7 +12,9 @@ module.exports = {
 
   async execute(message, args, client) {
     // todo: check user in database and see if they're in the green, if not, return sorry message
+    message.delete({ timeout: 1000 });
     const msg = await message.author.send(greetingMsg);
+
     const filter = (collected) => collected.author.id === message.author.id;
     const collected = await msg.channel
       .awaitMessages(filter, {
@@ -22,14 +24,10 @@ module.exports = {
       .catch(() => {
         message.author.send('This request timed out. Try again.');
       });
-
-    // todo: get collect.first().content.toLowerCase() and run it through a method that checks if valid game using the big game API
-    // todo:
     let selectedGame = collected.first().content.toLowerCase();
 
     if (selectedGame === 'cancel') {
       return message.author.send('Canceled');
-      // } else if (collected.first().content.toLowerCase() === a valid game from the api) {
     } else {
       const newMsg = await message.author
         .send(foundGameMsg(selectedGame))
@@ -53,7 +51,11 @@ module.exports = {
               processReaction(reaction.first().emoji.name);
             })
             .catch(() => {
-              message.author.send('No reaction after 60 seconds, operation canceled');
+              message.author.send(
+                embedMessage(
+                  'Sorry, we timed out! Wanna try again? Just ping me back in your server!'
+                )
+              );
             });
         });
     }
@@ -214,7 +216,7 @@ const greetingMsg = new MessageEmbed()
 
 const postReactionMsg = new MessageEmbed()
   .setTitle("I'll DM you for your match as soon as I can.")
-  .setDescription('Once I do, can you emoji react to get the connection info?')
+  .setDescription('Once I do, you can emoji react to get the connection info.')
   .setColor(process.env.EMBED_COLOR);
 // .setFooter('Did you enjoy your last match?');
 
