@@ -12,7 +12,18 @@ module.exports = {
 
   async execute(message, args, client) {
     // todo: check user in database and see if they're in the green, if not, return sorry message
+    let user = await findOrCreateUser(message.author);
     message.delete({ timeout: 1000 });
+    if (user.banCount >= 3 || user.kickCount >= 3)
+      return message.author.send(
+        embedMessage(`You are ineligible to use this service at the moment. 
+      
+      Ban count: ${user.banCount}
+      Kick count: ${user.kickCount}
+      
+      Please wait X days for those to cool down.`)
+      );
+
     const msg = await message.author.send(greetingMsg);
 
     const filter = (collected) => collected.author.id === message.author.id;
@@ -147,8 +158,7 @@ module.exports = {
 
         let game = collected.first().content.toLowerCase();
 
-        // todo: move the get user somewhere earlier
-        await findOrCreateUser(message.author);
+        // await findOrCreateUser(message.author);
         await createRequest(message, game, time);
 
         message.author.send(postReactionMsg);
