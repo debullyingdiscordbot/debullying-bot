@@ -145,25 +145,26 @@ module.exports = {
         await findOrCreateUser(message.author);
         await createRequest(message, game, time);
 
-        await message.author.send(postReactionMsg).then((msg) => {
-          msg.react('👍');
-          msg.react('👎');
+        message.author.send(postReactionMsg);
+        // .then((msg) => {
+        //   msg.react('👍');
+        //   msg.react('👎');
 
-          msg
-            .awaitReactions(
-              (reaction, user) =>
-                user.id == message.author.id &&
-                (reaction.emoji.name == '👍' || reaction.emoji.name == '👎'),
-              { max: 1, time: 60000 }
-            )
-            .then((reaction) => {
-              getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
-            })
-            .catch((err) => {
-              client.logger.error(err);
-              message.author.send('No reaction after 60 seconds, operation canceled');
-            });
-        });
+        //   msg
+        //     .awaitReactions(
+        //       (reaction, user) =>
+        //         user.id == message.author.id &&
+        //         (reaction.emoji.name == '👍' || reaction.emoji.name == '👎'),
+        //       { max: 1, time: 60000 }
+        //     )
+        //     .then((reaction) => {
+        //       getUserMatchFeedback(reaction.first().emoji.name, message.author.id);
+        //     })
+        //     .catch((err) => {
+        //       client.logger.error(err);
+        //       message.author.send('No reaction after 60 seconds, operation canceled');
+        //     });
+        // });
       } catch (error) {
         console.error(error);
       }
@@ -185,7 +186,7 @@ const foundGameMsg = (game) => {
           .join(' ')
       )
       .setDescription(
-        'Awesome, next question I need to know to match you. \n2. How long do you want to play for?'
+        'Awesome, next question I need to know to match you. \n\n*2. How long do you want to play for?*'
       )
       .setColor(process.env.EMBED_COLOR)
       // todo: add thumbnail??
@@ -199,7 +200,7 @@ const greetingMsg = new MessageEmbed()
   .setTitle("Welcome, let's get you paired to play.")
   .setDescription(
     `I have 2 questions I need answers for.
-     1. What game do you want to play?`
+     *1. What game do you want to play?*`
   )
   .setColor(process.env.EMBED_COLOR)
   .setFooter('Tip: Type out exact title');
@@ -210,8 +211,8 @@ const postReactionMsg = new MessageEmbed()
     `You'll need to react with an emoji to begin the chat with your match. 
     In the chat, you'll share your info in order to begin playing! If you don't have a match within 10 minutes I'll message to see if you want to keep waiting or change anything up.`
   )
-  .setColor(process.env.EMBED_COLOR)
-  .setFooter('Did you enjoy your last match?');
+  .setColor(process.env.EMBED_COLOR);
+// .setFooter('Did you enjoy your last match?');
 
 const foundPlayersMsg = (amount) =>
   new MessageEmbed()

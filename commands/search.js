@@ -36,12 +36,12 @@ module.exports = {
                   .then((user) =>
                     user.send(
                       embedMessage(
-                        `A match has been found. Slide into **${message.author.username}#${message.author.discriminator}**'s DMs`
+                        `A match has been found. Slide into **${message.author.username}#${message.author.discriminator}**'s DMs 😀`
                       )
                     )
                   );
               } else {
-                message.author.send('aslkdjflasdfl');
+                message.author.send(embedMessage(`Have a wonderful day.`));
               }
             })
             .catch((err) => {
@@ -94,4 +94,5 @@ const noMatchMsg = (game) => {
 };
 
 const embedMessage = (message) =>
-  new MessageEmbed().setDescription(message).setColor(process.env.EMBED_COLOR);
+  new MessageEmbed().setTitle(message).setColor(process.env.EMBED_COLOR);
+// new MessageEmbed().setDescription(message).setColor(process.env.EMBED_COLOR);
