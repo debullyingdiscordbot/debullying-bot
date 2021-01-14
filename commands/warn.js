@@ -26,13 +26,13 @@ module.exports = {
         let warnCount = await returnWarnCount(member.id);
 
         member.send(
-          warnMsg(`You've been warned by another user for misbehaving. X more warnings and you will not be able to use The Affirminator's services.
+          embedMsg(`You've been warned by another user for misbehaving. X more warnings and you will not be able to use The Affirminator's services.
         
         Warn count: ${warnCount}`)
         );
       } else {
         message.channel
-          .send(warnMsg('That member was not found.'))
+          .send(embedMsg('That member was not found.'))
           .then((m) => m.delete({ timeout: 5000 }));
       }
     } catch (error) {
@@ -41,5 +41,5 @@ module.exports = {
   },
 };
 
-const warnMsg = (msg) =>
+const embedMsg = (msg) =>
   new MessageEmbed().setDescription(msg).setColor(process.env.EMBED_COLOR);
