@@ -24,6 +24,7 @@ module.exports = {
   name: 'viewrep',
   description: "views the user's rep",
   async execute(message, args, client) {
+    message.delete({ timeout: 1000 });
     try {
       const user = await User.findOne({ id: args[0] });
 

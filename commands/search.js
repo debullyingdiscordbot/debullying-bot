@@ -36,8 +36,9 @@ module.exports = {
                   .fetch(randomMatch.userId)
                   .then((user) =>
                     user.send(
-                      embedMessage(
-                        `A match has been found. Slide into **${message.author.username}#${message.author.discriminator}**'s DMs 😀`
+                      matchFoundMessage(
+                        `A match has been found.`,
+                        `Send over a friend request to **${message.author.username}#${message.author.discriminator}** and slide in their DMs 😀.`
                       )
                     )
                   );
@@ -75,8 +76,8 @@ const foundGameMsg = (matches) => {
     .setDescription(
       `${
         matches === 1
-          ? 'Would you like to connect with them?'
-          : 'Would you like to connect with one of them?'
+          ? 'Wanna connect with them?'
+          : 'Wanna be matched with a random player?'
       }`
     )
     .setColor(process.env.EMBED_COLOR);
@@ -101,3 +102,9 @@ const noMatchMsg = (game) => {
 const embedMessage = (message) =>
   new MessageEmbed().setTitle(message).setColor(process.env.EMBED_COLOR);
 // new MessageEmbed().setDescription(message).setColor(process.env.EMBED_COLOR);
+
+const matchFoundMessage = (title, message) =>
+  new MessageEmbed()
+    .setTitle(message)
+    .setDescription(message)
+    .setColor(process.env.EMBED_COLOR);

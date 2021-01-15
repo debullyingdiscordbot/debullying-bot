@@ -18,11 +18,11 @@ module.exports = {
       return message.author.send(
         embedMessage(`You are ineligible to use this service at the moment. 
       
-      Ban count: ${user.banCount}
       Kick count: ${user.kickCount}
       
-      Please wait X days for those to cool down.`)
+      Please wait 10 days for the cool down period.`)
       );
+    // Ban count: ${user.banCount}
 
     const msg = await message.author.send(greetingMsg);
 
@@ -128,8 +128,9 @@ module.exports = {
                   .fetch(randomMatch.userId)
                   .then((user) =>
                     user.send(
-                      embedMessage(
-                        `A match has been found. Slide into **${message.author.username}#${message.author.discriminator}**'s DMs`
+                      foundMatchMessage(
+                        `A match has been found.`,
+                        `Slide into **${message.author.username}#${message.author.discriminator}**'s DMs`
                       )
                     )
                   );
@@ -232,8 +233,8 @@ const postReactionMsg = new MessageEmbed()
 
 const foundPlayersMsg = (amount) =>
   new MessageEmbed()
-    .setTitle(`${amount} matches found.`)
-    .setDescription(`Sweet, we found ${amount} matches. Want me to connect you?`)
+    .setTitle(`${amount} match found.`)
+    .setDescription(`Sweet, we found ${amount} match. Want me to connect you?`)
     .setColor(process.env.EMBED_COLOR);
 
 // todo: refactor all that crap above this line to a reusable method below
@@ -243,3 +244,8 @@ const embedMessage = (description) =>
     .setDescription(description)
     .setColor(process.env.EMBED_COLOR);
 // .setFooter(footer);
+const foundMatchMessage = (title, description) =>
+  new MessageEmbed()
+    .setTitle(title)
+    .setDescription(description)
+    .setColor(process.env.EMBED_COLOR);
